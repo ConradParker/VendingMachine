@@ -11,6 +11,6 @@ namespace VendingMachine.Dto
         public IList<Product> Products { get; set; }
         public IList<CoinType> KnownCoins { get; set; }
         public IList<ProductTypeDto> KnownProducts { get; set; }
-        public string Error { get; set; }
+        public string Message { get; set; }
     }
 }

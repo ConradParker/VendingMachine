@@ -37,22 +37,16 @@ namespace VendingMachine.Data
         private static IList<Coin> InitializeWallet()
         {
             var wallet = new List<Coin>();
+            
+            var tenCents = new CoinType { Name = "10 cent", Value = 0.10M };
+            var twentyCents = new CoinType { Name = "20 cent", Value = 0.20M };
+            var fiftyCents = new CoinType { Name = "50 cent", Value = 0.50M };
+            var oneEuro = new CoinType { Name = "1 euro", Value = 1 };
 
-            // Add 10 cents
-            var tenCents = new Coin { CoinType = new CoinType { Name = "10 cent", Value = 0.10M } };
-            100.Times(() => wallet.Add(tenCents));
-
-            // Add 20 cents
-            var twentyCents = new Coin { CoinType = new CoinType { Name = "20 cent", Value = 0.20M } };
-            100.Times(() => wallet.Add(twentyCents));
-
-            // Add 50 cents
-            var fiftyCents = new Coin { CoinType = new CoinType { Name = "50 cent", Value = 0.50M } };
-            100.Times(() => wallet.Add(fiftyCents));
-
-            // Add 1 euro
-            var oneEuro = new Coin { CoinType = new CoinType { Name = "1 euro", Value = 1 } };
-            100.Times(() => wallet.Add(oneEuro));
+            100.Times(() => wallet.Add(new Coin { CoinType = tenCents }));
+            100.Times(() => wallet.Add(new Coin { CoinType = twentyCents }));
+            100.Times(() => wallet.Add(new Coin { CoinType = fiftyCents }));
+            100.Times(() => wallet.Add(new Coin { CoinType = oneEuro }));
 
             return wallet;
         }
@@ -60,22 +54,15 @@ namespace VendingMachine.Data
         private static IList<Product> InitializeProducts()
         {
             var products = new List<Product>();
-
-            // Add Tea
-            var tea = new Product { ProductType = new ProductType { Name = "Tea", Price = 1.30M } };
-            10.Times(() => products.Add(tea));
-
-            // Add Expresso
-            var expresso = new Product { ProductType = new ProductType { Name = "Expresso", Price = 1.80M } };
-            20.Times(() => products.Add(expresso));
-
-            // Add Juice
-            var juice = new Product { ProductType = new ProductType { Name = "Juice", Price = 1.80M } };
-            20.Times(() => products.Add(juice));
+            var tea = new ProductType { Name = "Tea", Price = 1.30M };
+            var expresso = new ProductType { Name = "Expresso", Price = 1.80M };
+            var juice = new ProductType { Name = "Juice", Price = 1.80M };
+            var soup = new ProductType { Name = "Chicken Soup", Price = 1.80M };
             
-            // Add Soup
-            var soup = new Product { ProductType = new ProductType { Name = "Chicken Soup", Price = 1.80M } };
-            15.Times(() => products.Add(soup));
+            10.Times(() => products.Add(new Product { ProductType = tea }));
+            20.Times(() => products.Add(new Product { ProductType = expresso }));
+            20.Times(() => products.Add(new Product { ProductType = juice }));
+            15.Times(() => products.Add(new Product { ProductType = soup }));
 
             return products;
         }

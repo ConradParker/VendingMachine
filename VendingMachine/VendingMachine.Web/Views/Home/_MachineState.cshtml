@@ -14,8 +14,16 @@
         </ul>
 
     }
-    @if (Model.Error != null && Model.Error.Length > 0)
+    @if (Model.Message != null && Model.Message.Length > 0)
     {
-        <h3 class="alert-danger">@Model.Error</h3>
+        if (Model.Message == "Thank you!")
+        {
+            <h3 class="alert-success">@Model.Message</h3>
+        }
+        else
+        {
+            <h3 class="alert-danger">@Model.Message</h3>
+        }
+
     }
 </div>

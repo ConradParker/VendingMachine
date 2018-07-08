@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using VendingMachine.Data;
+using VendingMachine.Dto;
 using VendingMachine.Model;
 using VendingMachine.Web.Models;
 
@@ -30,22 +31,23 @@ namespace VendingMachine.Web.Controllers
 
         public IActionResult Index()
         {
-            var viewModel = _machineRepository.GetMachine(_machineId);
+            var viewModel = _machineRepository.GetMachineDto(_machineId);
             return View(viewModel);
         }
 
         public IActionResult ChooseProduct(int productId)
         {            
-            var viewModel = _machineRepository.GetMachine(_machineId);
+            var viewModel = _machineRepository.GetMachineDto(_machineId);
             var selectedProduct = viewModel.KnownProducts.FirstOrDefault(p => p.Id == productId);
             if(selectedProduct.Price > viewModel.MoneyInserted.Sum(i => i.Value))
             {
-                viewModel.Error = "Insuffcient credit!";
+                viewModel.Message = "Insuffcient amount!";
             }
             else
             {
                 _machineRepository.DispenseProduct(_machineId, productId);
-                viewModel = _machineRepository.GetMachine(_machineId);
+                viewModel = Eject();
+                viewModel.Message = "Thank you!";
             }
             
             return PartialView("_MachineState", viewModel);
@@ -55,20 +57,13 @@ namespace VendingMachine.Web.Controllers
         {
             _machineRepository.AcceptCoin(_machineId, coinTypeId);
 
-            var viewModel = _machineRepository.GetMachine(_machineId);
+            var viewModel = _machineRepository.GetMachineDto(_machineId);
             return PartialView("_MachineState", viewModel);
         }
 
         public IActionResult EjectCoins()
         {
-            var viewModel = _machineRepository.GetMachine(_machineId);
-            var moneyEjected = viewModel.MoneyInserted;
-
-            _machineRepository.EjectCoins(_machineId);
-
-            viewModel = _machineRepository.GetMachine(_machineId);
-            viewModel.MoneyEjected = moneyEjected;
-            return PartialView("_MachineState", viewModel);
+            return PartialView("_MachineState", Eject());
         }
 
         public IActionResult About()
@@ -94,7 +89,18 @@ namespace VendingMachine.Web.Controllers
 
         #region Private Methods
 
-        
+        private VendingMachineDto Eject()
+        {
+            var viewModel = _machineRepository.GetMachineDto(_machineId);
+            var moneyEjected = viewModel.MoneyInserted;
+
+            _machineRepository.EjectCoins(_machineId);
+
+            viewModel = _machineRepository.GetMachineDto(_machineId);
+            viewModel.MoneyEjected = moneyEjected;
+
+            return viewModel;
+        }
         #endregion
     }
 }
