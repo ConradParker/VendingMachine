@@ -1,0 +1,8 @@
+﻿namespace VendingMachine.Model
+{
+    public class Product
+    {
+        public int Id { get; set; }
+        public ProductType ProductType { get; set; }
+    }
+}

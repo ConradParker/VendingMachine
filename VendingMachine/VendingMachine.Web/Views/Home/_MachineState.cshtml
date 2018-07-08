@@ -1,0 +1,21 @@
+﻿@model VendingMachine.Dto.VendingMachineDto
+
+<h2>Credit</h2>
+<div>@string.Format(System.Globalization.CultureInfo.GetCultureInfo("es-ES"), "{0:C}", Model.MoneyInserted.Sum(c => c.Value))</div>
+<div>
+    @if (Model.MoneyEjected != null && Model.MoneyEjected.Any())
+    {
+        <h2>Ejected Coins</h2>
+        <ul>
+            @foreach (var item in Model.MoneyEjected)
+            {
+                <li>@item.CoinTypeName</li>
+            }
+        </ul>
+
+    }
+    @if (Model.Error != null && Model.Error.Length > 0)
+    {
+        <h3 class="alert-danger">@Model.Error</h3>
+    }
+</div>

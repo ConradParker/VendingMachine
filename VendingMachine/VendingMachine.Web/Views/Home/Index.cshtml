@@ -1,0 +1,88 @@
+﻿@model VendingMachine.Dto.VendingMachineDto;
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h2>Insert Coin</h2>
+            @Html.DropDownList("CoinTypes", new SelectList(Model.KnownCoins, "Id", "Name"), htmlAttributes: new { @class = "form-control", id = "CoinType" })
+        </div>
+        <button class="btn btn-primary" onclick="insertCoin()">Insert</button>
+        <button class="btn btn-primary" onclick="ejectCoins()">Eject</button>
+        
+        <div>
+            <h2>Choose Product</h2>
+            @Html.DropDownList("ProductTypes", new SelectList(Model.KnownProducts, "Id", "Description"), htmlAttributes: new { @class = "form-control", id = "ProductType" })
+            <button class="btn btn-primary" onclick="chooseProduct()">Select Product</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="loader"></div>
+        <div id="machine-state">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function chooseProduct() {
+            clearState();
+            var e = document.getElementById("ProductType");
+            var productId = e.options[e.selectedIndex].value;
+
+            $.ajax({
+                url: '@Url.Action("ChooseProduct", "Home")?productId=' + productId,
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    setState(data);
+                },
+            });
+        };
+
+        function insertCoin() {
+
+            clearState();
+            var e = document.getElementById("CoinType");
+            var coinTypeId = e.options[e.selectedIndex].value;
+
+            $.ajax({
+                url: '@Url.Action("InsertCoin", "Home")?coinTypeId=' + coinTypeId,
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    setState(data);
+                },
+            });
+        };
+
+        function ejectCoins() {
+            clearState();
+
+            $.ajax({
+                url: '@Url.Action("EjectCoins", "Home")',
+                type: "GET",
+                dataType: "html",
+                success: function (data) {
+                    setState(data);
+                },
+            });
+        };
+
+        function clearState() {
+            $('#machine-state').html(null);
+            $('.loader').show();
+        }
+
+        function setState(data) {
+            $('.loader').hide();
+            $('#machine-state').html(data);
+        }
+
+        ejectCoins();
+    </script>
+}
